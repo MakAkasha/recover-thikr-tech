@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Store {
+  id                String   @id @default(cuid())
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  sallaStoreId      String   @unique
+  sallaAccessToken  String
+  sallaRefreshToken String
+  sallaStoreName    String
+  sallaStoreUrl     String
+
+  ownerEmail        String
+  ownerName         String
+
+  whatsappSessionId String?
+  whatsappConnected Boolean  @default(false)
+  whatsappNumber    String?
+
+  delayMinutes      Int      @default(60)
+  discountPercent   Int      @default(10)
+  messageTemplate   String?
+  isActive          Boolean  @default(false)
+
+  subscription      Subscription?
+  recoveryLogs      RecoveryLog[]
+  discountCodes     DiscountCode[]
+}
+
+model Subscription {
+  id               String   @id @default(cuid())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  storeId          String   @unique
+  store            Store    @relation(fields: [storeId], references: [id])
+
+  plan             String   @default("starter")
+  status           String   @default("trial")
+  trialEndsAt      DateTime
+  currentPeriodEnd DateTime?
+
+  moyasarSubId     String?
+  moyasarCustId    String?
+}
+
+model RecoveryLog {
+  id             String   @id @default(cuid())
+  createdAt      DateTime @default(now())
+
+  storeId        String
+  store          Store    @relation(fields: [storeId], references: [id])
+
+  sallaCartId    String
+  sallaOrderId   String?
+  customerName   String
+  customerPhone  String
+  cartValue      Float
+  cartItems      Json
+
+  bullJobId      String?
+  scheduledFor   DateTime
+
+  status         String   @default("queued")
+  sentAt         DateTime?
+  recoveredAt    DateTime?
+  recoveredValue Float?
+
+  discountCode   String?
+
+  @@index([storeId, createdAt])
+  @@index([sallaCartId])
+}
+
+model DiscountCode {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  storeId   String
+  store     Store    @relation(fields: [storeId], references: [id])
+
+  code      String   @unique
+  percent   Int
+  usedAt    DateTime?
+  cartId    String?
+
+  @@index([storeId, createdAt])
+}
