@@ -9,6 +9,7 @@ export const webhookRouter = Router();
 
 webhookRouter.post('/salla/:storeId', rateLimitWebhook(), validateSallaWebhook, async (req, res, next) => {
   try {
+    const payload = JSON.parse((req.body as Buffer).toString('utf8'));
     const storeId = String(req.params.storeId ?? '');
     if (!storeId) {
       res.status(400).json({ error: 'Missing storeId' });
@@ -26,7 +27,6 @@ webhookRouter.post('/salla/:storeId', rateLimitWebhook(), validateSallaWebhook, 
       return;
     }
 
-    const payload = req.body;
     const cart = payload?.data;
     const cartId = String(cart?.id ?? '');
     if (!cartId) {
@@ -76,7 +76,7 @@ webhookRouter.post('/salla/:storeId', rateLimitWebhook(), validateSallaWebhook, 
       data: { bullJobId: String(job.id) },
     });
 
-    res.status(202).json({ ok: true });
+    res.status(201).json({ ok: true });
   } catch (error: any) {
     if (error?.message?.includes('JobId')) {
       res.status(202).json({ ok: true, deduplicated: true });

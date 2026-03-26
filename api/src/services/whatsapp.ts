@@ -5,6 +5,7 @@ import { prisma } from '../db/client';
 import { emitQr, emitWhatsappReady } from '../ws/qrSocket';
 
 const sessions = new Map<string, Client>();
+const lastSeenByStore = new Map<string, string>();
 
 export function getSessionHealth() {
   const stores = Array.from(sessions.keys());
@@ -12,6 +13,14 @@ export function getSessionHealth() {
     connectedStores: stores.length,
     stores,
   };
+}
+
+export function listSessionStatuses() {
+  return Array.from(new Set([...sessions.keys(), ...lastSeenByStore.keys()])).map((storeId) => ({
+    storeId,
+    connected: sessions.has(storeId),
+    lastSeen: lastSeenByStore.get(storeId) ?? null,
+  }));
 }
 
 export async function getOrCreateSession(storeId: string): Promise<Client> {
@@ -34,6 +43,7 @@ export async function getOrCreateSession(storeId: string): Promise<Client> {
   });
 
   client.on('ready', async () => {
+    lastSeenByStore.set(storeId, new Date().toISOString());
     await prisma.store.update({
       where: { id: storeId },
       data: {
@@ -47,6 +57,7 @@ export async function getOrCreateSession(storeId: string): Promise<Client> {
 
   client.on('disconnected', async () => {
     sessions.delete(storeId);
+    lastSeenByStore.set(storeId, new Date().toISOString());
     await prisma.store.update({ where: { id: storeId }, data: { whatsappConnected: false } });
   });
 
