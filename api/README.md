@@ -46,3 +46,31 @@ npm run prisma:migrate -- --name init
 npm run dev
 npm run worker
 ```
+
+## Verification scripts
+
+You can run quick checks against a running local API:
+
+```bash
+npm run verify:basic
+```
+
+This verifies:
+- `GET /api/health`
+- `GET /api/whatsapp/health`
+- `GET /api/admin/sessions`
+- invalid Moyasar webhook request path returns expected validation error
+
+For signed webhook checks:
+
+```bash
+npm run verify:webhooks
+```
+
+Optional env vars used by signed checks:
+- `API_BASE_URL` (default: `http://localhost:3001`)
+- `SALLA_WEBHOOK_SECRET` (required for Salla signed check)
+- `SALLA_TEST_STORE_ID` (default: `test-store`)
+- `MOYASAR_API_KEY` (required for Moyasar signed check)
+
+If signing secrets are not set, the script will skip those checks gracefully.

@@ -9,7 +9,9 @@
     "start": "node dist/index.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "worker": "tsx src/workers/recovery.worker.ts"
+    "worker": "tsx src/workers/recovery.worker.ts",
+    "verify:basic": "node scripts/verify-basic-endpoints.mjs",
+    "verify:webhooks": "node scripts/verify-signed-webhooks.mjs"
   },
   "dependencies": {
     "@prisma/client": "^6.6.0",
