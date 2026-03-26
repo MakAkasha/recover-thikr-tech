@@ -1,6 +1,8 @@
 import http from 'http';
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
+import compression from 'compression';
 import pinoHttp from 'pino-http';
 import { config } from './config';
 import { internalRouter } from './routes/internal';
@@ -13,19 +15,27 @@ import { startMaintenanceJobs } from './jobs/maintenance';
 
 const app = express();
 
-app.use(cors());
+app.set('trust proxy', config.trustProxy);
+
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+  }),
+);
+app.use(compression());
+app.use(cors({ origin: config.corsOrigin === '*' ? true : config.corsOrigin }));
 app.use(pinoHttp());
 
 // Salla webhook must use raw body for HMAC validation
-app.use('/api/webhook/salla/:storeId', express.raw({ type: 'application/json', limit: '1mb' }));
-app.use(express.json({ limit: '1mb' }));
+app.use('/api/webhook/salla/:storeId', express.raw({ type: 'application/json', limit: config.bodyLimit }));
+app.use(express.json({ limit: config.bodyLimit }));
 
 app.use('/api', internalRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/webhook', webhookRouter);
 
 // Moyasar webhook must use raw body for signature verification
-app.use('/api/payments/moyasar/webhook', express.raw({ type: 'application/json', limit: '1mb' }));
+app.use('/api/payments/moyasar/webhook', express.raw({ type: 'application/json', limit: config.bodyLimit }));
 app.use('/api/payments', paymentsRouter);
 
 app.post('/api/whatsapp/:storeId/connect', async (req, res, next) => {

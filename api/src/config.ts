@@ -11,6 +11,11 @@ function required(name: string): string {
 export const config = {
   nodeEnv: process.env.NODE_ENV ?? 'development',
   apiPort: Number(process.env.API_PORT ?? 3001),
+  trustProxy: (process.env.TRUST_PROXY ?? 'true') === 'true',
+  corsOrigin: process.env.CORS_ORIGIN ?? '*',
+  bodyLimit: process.env.BODY_LIMIT ?? '1mb',
+  webhookRateLimitMax: Number(process.env.WEBHOOK_RATE_LIMIT_MAX ?? 60),
+  webhookRateLimitWindowMs: Number(process.env.WEBHOOK_RATE_LIMIT_WINDOW_MS ?? 60_000),
   databaseUrl: required('DATABASE_URL'),
   redisUrl: required('REDIS_URL'),
   sallaClientId: process.env.SALLA_CLIENT_ID ?? '',

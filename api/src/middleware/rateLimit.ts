@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
+import { config } from '../config';
 
 type Entry = { count: number; resetAt: number };
 
 const buckets = new Map<string, Entry>();
 
-export function rateLimitWebhook(maxRequests = 60, windowMs = 60_000) {
+export function rateLimitWebhook(maxRequests = config.webhookRateLimitMax, windowMs = config.webhookRateLimitWindowMs) {
   return (req: Request, res: Response, next: NextFunction) => {
     const key = `${req.ip}:${req.path}`;
     const now = Date.now();

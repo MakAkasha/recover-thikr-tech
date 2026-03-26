@@ -4,13 +4,13 @@ This document replaces the previous planning notes and focuses on execution prio
 
 ## 1) Immediate Stability & Verification (Now)
 
-- [ ] Validate webhook flows end-to-end with **real signed payloads**:
-  - [ ] Salla webhook valid signature path (`201` + queued job)
-  - [ ] Moyasar webhook valid signature path (`200` + subscription/store activation)
-- [ ] Add lightweight integration test scripts for critical endpoints:
-  - [ ] `/api/webhook/salla/:storeId`
-  - [ ] `/api/payments/moyasar/webhook`
-  - [ ] `/api/health`, `/api/whatsapp/health`, `/api/admin/sessions`
+- [~] Validate webhook flows end-to-end with **real signed payloads**:
+  - [ ] Salla webhook valid signature path (`201` + queued job) in realistic environment
+  - [ ] Moyasar webhook valid signature path (`200` + subscription/store activation) in realistic environment
+- [x] Add lightweight integration test scripts for critical endpoints:
+  - [x] `/api/webhook/salla/:storeId` (signed test harness script)
+  - [x] `/api/payments/moyasar/webhook` (signed test harness script)
+  - [x] `/api/health`, `/api/whatsapp/health`, `/api/admin/sessions`
 - [ ] Verify worker behavior in all branches:
   - [ ] successful send
   - [ ] cancelled (cart converted)
@@ -20,7 +20,7 @@ This document replaces the previous planning notes and focuses on execution prio
 ## 2) Security & Compliance Hardening
 
 - [ ] Add persistent/richer rate limiting (Redis-backed) for webhook routes.
-- [ ] Add request size guards and explicit content-type checks on sensitive routes.
+- [x] Add request size guards and explicit content-type checks on sensitive routes.
 - [ ] Add structured audit logs for:
   - [ ] auth callback events
   - [ ] payment activation events
