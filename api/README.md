@@ -1,6 +1,6 @@
-# Recover API — Phase 1
+# Baqi API — Phase 1
 
-Backend core for `recover.thikr.tech` (Node.js + Express + TypeScript + Prisma + Bull).
+Backend core for `baqi.thikr.tech` (Node.js + Express + TypeScript + Prisma + Bull).
 
 ## Implemented in this phase
 

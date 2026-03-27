@@ -23,7 +23,7 @@ export default function MessagesPage() {
         .replaceAll('{اسم_العميل}', 'محمد')
         .replaceAll('{المنتجات}', '• حذاء رياضي (1x) — 299 ر.س')
         .replaceAll('{المجموع}', '299')
-        .replaceAll('{كود_الخصم}', 'RECOVER-X7K2P')
+        .replaceAll('{كود_الخصم}', 'BAQI-X7K2P')
         .replaceAll('{نسبة_الخصم}', '10'),
     [template],
   );

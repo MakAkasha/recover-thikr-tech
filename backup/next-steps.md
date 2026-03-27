@@ -1,4 +1,4 @@
-# next-steps.md — recover.thikr.tech
+# next-steps.md — Baqi.thikr.tech
 > Post-build action plan. Work through this top to bottom. Each section is a self-contained task.
 
 ---
@@ -34,7 +34,7 @@ DASHBOARD_PORT=3000
 API_URL=http://localhost:3001
 DASHBOARD_URL=http://localhost:3000
 
-DATABASE_URL=postgresql://recover:localpass@postgres:5432/recover
+DATABASE_URL=postgresql://Baqi:localpass@postgres:5432/Baqi
 REDIS_URL=redis://redis:6379
 
 SALLA_CLIENT_ID=FILL_LATER
@@ -63,7 +63,7 @@ openssl rand -base64 32
 ### 1.2 Run the full stack locally with Docker
 
 ```bash
-cd recover
+cd Baqi
 docker compose up --build
 ```
 
@@ -87,7 +87,7 @@ docker compose exec api npx prisma generate
 
 Verify DB schema was created:
 ```bash
-docker compose exec postgres psql -U recover -d recover -c "\dt"
+docker compose exec postgres psql -U Baqi -d Baqi -c "\dt"
 ```
 
 You should see: `stores`, `subscriptions`, `recovery_logs`, `discount_codes` tables.
@@ -160,8 +160,8 @@ Go through these files and confirm Cline implemented them correctly. Fix anythin
 
 **`docker-compose.yml`**
 - [ ] `api` service mounts `./data/whatsapp-sessions:/data/whatsapp-sessions`
-- [ ] `postgres` and `redis` are on `recover-internal` network only (not exposed to `thikr-proxy`)
-- [ ] `api` and `dashboard` are on both `thikr-proxy` and `recover-internal`
+- [ ] `postgres` and `redis` are on `Baqi-internal` network only (not exposed to `thikr-proxy`)
+- [ ] `api` and `dashboard` are on both `thikr-proxy` and `Baqi-internal`
 - [ ] All containers have `restart: always`
 
 ---
@@ -173,7 +173,7 @@ Go through these files and confirm Cline implemented them correctly. Fix anythin
 1. Go to https://salla.partners and create an account
 2. Create a new app — type: **Public App** (so any store can install it)
 3. App settings:
-   - **OAuth Redirect URI**: `https://recover.thikr.tech/api/auth/salla/callback`
+   - **OAuth Redirect URI**: `https://Baqi.thikr.tech/api/auth/salla/callback`
    - **Scopes**: `offline_access`, `orders.read`, `products.read`, `webhooks.write`
    - **Webhook events**: `abandoned.cart`
 4. Copy `Client ID` and `Client Secret` into your `.env`
@@ -199,8 +199,8 @@ Temporarily set `API_URL` in `.env` to the ngrok HTTPS URL, test the full OAuth 
 ```bash
 ssh mak@YOUR_VPS_IP
 cd /home/mak/thikr/tools
-git clone https://github.com/MakAkasha/recover-thikr-tech recover
-cd recover
+git clone https://github.com/MakAkasha/Baqi-thikr-tech Baqi
+cd Baqi
 ```
 
 ### 3.2 Create production `.env`
@@ -212,43 +212,43 @@ nano .env
 
 Key differences from local `.env`:
 - `NODE_ENV=production`
-- `API_URL=https://recover.thikr.tech/api`
-- `DASHBOARD_URL=https://recover.thikr.tech`
-- `NEXTAUTH_URL=https://recover.thikr.tech`
+- `API_URL=https://Baqi.thikr.tech/api`
+- `DASHBOARD_URL=https://Baqi.thikr.tech`
+- `NEXTAUTH_URL=https://Baqi.thikr.tech`
 - Use strong random passwords for `POSTGRES_PASSWORD` (min 32 chars)
 
 ### 3.3 Add DNS A record
 
 In Hostinger DNS panel:
 ```
-A    recover    →    YOUR_VPS_IP    TTL: 300
+A    Baqi    →    YOUR_VPS_IP    TTL: 300
 ```
 
 Verify propagation:
 ```bash
-dig recover.thikr.tech +short
+dig Baqi.thikr.tech +short
 ```
 
-### 3.4 Set up Nginx for recover.thikr.tech
+### 3.4 Set up Nginx for Baqi.thikr.tech
 
 ```bash
-sudo nano /etc/nginx/sites-available/recover.thikr.tech
+sudo nano /etc/nginx/sites-available/Baqi.thikr.tech
 ```
 
 Paste:
 ```nginx
 server {
     listen 80;
-    server_name recover.thikr.tech;
+    server_name Baqi.thikr.tech;
     return 301 https://$host$request_uri;
 }
 
 server {
     listen 443 ssl;
-    server_name recover.thikr.tech;
+    server_name Baqi.thikr.tech;
 
-    ssl_certificate /etc/letsencrypt/live/recover.thikr.tech/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/recover.thikr.tech/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/Baqi.thikr.tech/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/Baqi.thikr.tech/privkey.pem;
 
     # Dashboard
     location / {
@@ -281,16 +281,16 @@ server {
 
 Enable and get SSL:
 ```bash
-sudo ln -s /etc/nginx/sites-available/recover.thikr.tech /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/Baqi.thikr.tech /etc/nginx/sites-enabled/
 sudo nginx -t
-sudo certbot --nginx -d recover.thikr.tech
+sudo certbot --nginx -d Baqi.thikr.tech
 sudo nginx -s reload
 ```
 
 ### 3.5 Build and start on VPS
 
 ```bash
-cd /home/mak/thikr/tools/recover
+cd /home/mak/thikr/tools/Baqi
 docker compose up --build -d
 ```
 
@@ -306,8 +306,8 @@ docker compose logs --tail=30
 ```
 
 Verify live:
-- `https://recover.thikr.tech` — dashboard loads
-- `https://recover.thikr.tech/api/health` — returns `{ status: "ok" }`
+- `https://Baqi.thikr.tech` — dashboard loads
+- `https://Baqi.thikr.tech/api/health` — returns `{ status: "ok" }`
 
 ---
 
@@ -369,7 +369,7 @@ If Cline didn't build this route, add it before going live — without it, paid 
 - [ ] Consistent number formatting throughout (pick either Eastern Arabic numerals ٢٩٩ or Western 299 — don't mix)
 
 ### Legal — Saudi PDPL
-- [ ] Privacy policy page exists at `recover.thikr.tech/privacy`
+- [ ] Privacy policy page exists at `Baqi.thikr.tech/privacy`
 - [ ] Customer phone numbers are not logged in plaintext in application logs
 - [ ] Data retention: `RecoveryLog` records auto-delete after 90 days (add a cron job)
 - [ ] Store owner onboarding includes a note that they are responsible for obtaining customer consent
@@ -387,7 +387,7 @@ Required for submission:
 - Screenshots of the dashboard in Arabic
 - Short description in Arabic (max 150 chars)
 - Long description explaining the value
-- Privacy policy URL (`recover.thikr.tech/privacy`)
+- Privacy policy URL (`Baqi.thikr.tech/privacy`)
 - Support email
 
 Suggested short description:
@@ -461,9 +461,9 @@ GET /api/admin/sessions
 
 Add to VPS crontab (`crontab -e`):
 ```bash
-0 2 * * * docker compose -f /home/mak/thikr/tools/recover/docker-compose.yml exec -T postgres pg_dump -U recover recover > /home/mak/backups/recover-$(date +\%Y\%m\%d).sql
+0 2 * * * docker compose -f /home/mak/thikr/tools/Baqi/docker-compose.yml exec -T postgres pg_dump -U Baqi Baqi > /home/mak/backups/Baqi-$(date +\%Y\%m\%d).sql
 # Keep last 30 days
-find /home/mak/backups -name "recover-*.sql" -mtime +30 -delete
+find /home/mak/backups -name "Baqi-*.sql" -mtime +30 -delete
 ```
 
 ---
@@ -472,7 +472,7 @@ find /home/mak/backups -name "recover-*.sql" -mtime +30 -delete
 
 ```bash
 # Navigate to project on VPS
-cd /home/mak/thikr/tools/recover
+cd /home/mak/thikr/tools/Baqi
 
 # View all logs live
 docker compose logs -f
@@ -490,7 +490,7 @@ git pull && docker compose up --build -d
 docker compose exec api npx prisma migrate deploy
 
 # Open Postgres shell
-docker compose exec postgres psql -U recover -d recover
+docker compose exec postgres psql -U Baqi -d Baqi
 
 # Check Bull queue depth
 docker compose exec redis redis-cli LLEN bull:cart-recovery:wait

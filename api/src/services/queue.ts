@@ -6,7 +6,7 @@ export const recoveryQueue = new Bull<RecoveryJobData>('cart-recovery', {
   redis: config.redisUrl,
 });
 
-export async function scheduleRecovery(data: RecoveryJobData, delayMs: number): Promise<Bull.Job<RecoveryJobData>> {
+export async function schedulerecovery(data: RecoveryJobData, delayMs: number): Promise<Bull.Job<RecoveryJobData>> {
   return recoveryQueue.add(data, {
     delay: delayMs,
     attempts: 3,
@@ -17,7 +17,7 @@ export async function scheduleRecovery(data: RecoveryJobData, delayMs: number): 
   });
 }
 
-export async function cancelRecovery(cartId: string): Promise<void> {
+export async function cancelrecovery(cartId: string): Promise<void> {
   const job = await recoveryQueue.getJob(`recovery-${cartId}`);
   if (job) await job.remove();
 }

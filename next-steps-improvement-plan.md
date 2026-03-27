@@ -1,4 +1,4 @@
-# Recover SaaS — Next Steps & Improvement Plan
+# Baqi SaaS — Next Steps & Improvement Plan
 
 This document replaces the previous planning notes and focuses on execution priorities after the latest hardening release.
 

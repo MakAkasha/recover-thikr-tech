@@ -110,7 +110,7 @@ export async function fetchStoreProfile(accessToken: string): Promise<{ id: stri
 
 export async function registerAbandonedCartWebhook(store: StoreLike): Promise<void> {
   await sallaPost(store, '/webhooks', {
-    name: 'Recover - Abandoned Cart',
+    name: 'baqi - Abandoned Cart',
     event: 'abandoned.cart',
     url: `${config.apiUrl}/webhook/salla/${store.id}`,
     secret: config.sallaWebhookSecret,

@@ -1,12 +1,12 @@
-# recover.thikr.tech — Salla Abandoned Cart WhatsApp Recovery
+# Baqi.thikr.tech — Salla Abandoned Cart WhatsApp Recovery
 > Full project reference for Cline. Read this entire file before writing any code.
 
 ---
 
 ## 1. Project Overview
 
-**Product name:** Recover  
-**Domain:** recover.thikr.tech  
+**Product name:** Baqi  
+**Domain:** Baqi.thikr.tech  
 **Purpose:** A SaaS tool for Saudi Salla store owners that automatically sends personalized Arabic WhatsApp messages to customers who abandon their carts, recovering lost revenue.  
 **Target market:** Saudi e-commerce store owners on the Salla platform  
 **Monetization:** Monthly subscription per store (via Moyasar)  
@@ -17,12 +17,12 @@
 ## 2. How It Works (End-to-End Flow)
 
 ```
-1. Store owner signs up on recover.thikr.tech
+1. Store owner signs up on Baqi.thikr.tech
 2. They connect their Salla store via Salla OAuth
 3. They scan a WhatsApp QR code to link their WhatsApp Business number
-4. Recover registers a webhook on their Salla store for abandoned_cart events
+4. Baqi registers a webhook on their Salla store for abandoned_cart events
 5. When a customer abandons a cart:
-   a. Salla fires a webhook to recover.thikr.tech/api/webhook/salla/:storeId
+   a. Salla fires a webhook to Baqi.thikr.tech/api/webhook/salla/:storeId
    b. API validates the webhook signature
    c. A Bull job is queued with a 1-hour delay
    d. After 1 hour, the worker checks Salla API — if order is now complete, cancel the job
@@ -54,7 +54,7 @@
 ## 4. Project Structure
 
 ```
-recover/
+Baqi/
 ├── docker-compose.yml
 ├── .env                          ← never commit this
 ├── .env.example
@@ -237,11 +237,11 @@ model DiscountCode {
 NODE_ENV=production
 API_PORT=3001
 DASHBOARD_PORT=3000
-API_URL=https://recover.thikr.tech/api
-DASHBOARD_URL=https://recover.thikr.tech
+API_URL=https://Baqi.thikr.tech/api
+DASHBOARD_URL=https://Baqi.thikr.tech
 
 # Database
-DATABASE_URL=postgresql://recover:CHANGE_ME@postgres:5432/recover
+DATABASE_URL=postgresql://Baqi:CHANGE_ME@postgres:5432/Baqi
 
 # Redis
 REDIS_URL=redis://redis:6379
@@ -261,7 +261,7 @@ EMAIL_FROM=noreply@thikr.tech
 
 # NextAuth
 NEXTAUTH_SECRET=
-NEXTAUTH_URL=https://recover.thikr.tech
+NEXTAUTH_URL=https://Baqi.thikr.tech
 
 # Prayer times API (Aladhan - free)
 ALADHAN_API_URL=https://api.aladhan.com/v1
@@ -278,9 +278,9 @@ After a store owner connects their Salla account via OAuth, call Salla API to re
 POST https://api.salla.dev/admin/v2/webhooks
 Authorization: Bearer {sallaAccessToken}
 {
-  "name": "Recover - Abandoned Cart",
+  "name": "Baqi - Abandoned Cart",
   "event": "abandoned.cart",
-  "url": "https://recover.thikr.tech/api/webhook/salla/{storeId}",
+  "url": "https://Baqi.thikr.tech/api/webhook/salla/{storeId}",
   "secret": "{SALLA_WEBHOOK_SECRET}"
 }
 ```
@@ -540,11 +540,11 @@ export async function sendMessage(storeId: string, phone: string, message: strin
 ## 12. Docker Compose
 
 ```yaml
-# recover/docker-compose.yml
+# Baqi/docker-compose.yml
 services:
   api:
     build: ./api
-    container_name: recover-api
+    container_name: Baqi-api
     restart: always
     ports:
       - "3001:3001"
@@ -558,11 +558,11 @@ services:
       - redis
     networks:
       - thikr-proxy
-      - recover-internal
+      - Baqi-internal
 
   dashboard:
     build: ./dashboard
-    container_name: recover-dashboard
+    container_name: Baqi-dashboard
     restart: always
     ports:
       - "3002:3000"
@@ -571,34 +571,34 @@ services:
       - api
     networks:
       - thikr-proxy
-      - recover-internal
+      - Baqi-internal
 
   postgres:
     image: postgres:16-alpine
-    container_name: recover-postgres
+    container_name: Baqi-postgres
     restart: always
     environment:
-      POSTGRES_USER: recover
+      POSTGRES_USER: Baqi
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: recover
+      POSTGRES_DB: Baqi
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
     networks:
-      - recover-internal
+      - Baqi-internal
 
   redis:
     image: redis:7-alpine
-    container_name: recover-redis
+    container_name: Baqi-redis
     restart: always
     volumes:
       - ./data/redis:/data
     networks:
-      - recover-internal
+      - Baqi-internal
 
 networks:
   thikr-proxy:
     external: true
-  recover-internal:
+  Baqi-internal:
     driver: bridge
 ```
 
@@ -606,21 +606,21 @@ networks:
 
 ## 13. Nginx Config (system nginx on VPS)
 
-Add to `/etc/nginx/sites-available/recover.thikr.tech`:
+Add to `/etc/nginx/sites-available/Baqi.thikr.tech`:
 
 ```nginx
 server {
     listen 80;
-    server_name recover.thikr.tech;
+    server_name Baqi.thikr.tech;
     return 301 https://$host$request_uri;
 }
 
 server {
     listen 443 ssl;
-    server_name recover.thikr.tech;
+    server_name Baqi.thikr.tech;
 
-    ssl_certificate /etc/letsencrypt/live/recover.thikr.tech/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/recover.thikr.tech/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/Baqi.thikr.tech/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/Baqi.thikr.tech/privkey.pem;
 
     # Dashboard — root
     location / {
@@ -652,8 +652,8 @@ server {
 
 Then run:
 ```bash
-sudo ln -s /etc/nginx/sites-available/recover.thikr.tech /etc/nginx/sites-enabled/
-sudo certbot --nginx -d recover.thikr.tech
+sudo ln -s /etc/nginx/sites-available/Baqi.thikr.tech /etc/nginx/sites-enabled/
+sudo certbot --nginx -d Baqi.thikr.tech
 sudo nginx -s reload
 ```
 
@@ -697,7 +697,7 @@ sudo nginx -s reload
 1. Store owner clicks "Connect Salla Store"
 2. Redirect to: https://accounts.salla.sa/oauth2/auth
    ?client_id={SALLA_CLIENT_ID}
-   &redirect_uri=https://recover.thikr.tech/api/auth/salla/callback
+   &redirect_uri=https://Baqi.thikr.tech/api/auth/salla/callback
    &response_type=code
    &scope=offline_access+products.read+orders.read+webhooks.write
 
@@ -754,7 +754,7 @@ Build in this exact sequence. Complete and test each phase before starting the n
 - **Never queue the same cart twice.** Use `jobId: recovery-{cartId}` in Bull so duplicate webhooks are ignored.
 - **WhatsApp sessions must persist across restarts.** Mount `/data/whatsapp-sessions` as a Docker volume.
 - **Salla tokens expire.** Implement refresh token logic using `sallaRefreshToken` before every Salla API call.
-- **Discount codes must be unique per cart.** Generate with `nanoid` + store prefix e.g. `RECOVER-X7K2P`.
+- **Discount codes must be unique per cart.** Generate with `nanoid` + store prefix e.g. `Baqi-X7K2P`.
 - **Do not store raw customer phone numbers in logs** beyond what's needed. Saudi PDPL compliance.
 - **The API and dashboard are separate Node processes** but share the same Postgres DB and Redis instance.
 - **Use TypeScript throughout.** Strict mode enabled.

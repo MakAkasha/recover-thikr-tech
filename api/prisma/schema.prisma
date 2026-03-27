@@ -31,7 +31,7 @@ model Store {
   isActive          Boolean  @default(false)
 
   subscription      Subscription?
-  recoveryLogs      RecoveryLog[]
+  recoveryLogs      recoveryLog[]
   discountCodes     DiscountCode[]
 }
 
@@ -52,7 +52,7 @@ model Subscription {
   moyasarCustId    String?
 }
 
-model RecoveryLog {
+model recoveryLog {
   id             String   @id @default(cuid())
   createdAt      DateTime @default(now())
 

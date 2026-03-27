@@ -58,4 +58,4 @@ recoveryQueue.process(async (job) => {
 });
 
 // eslint-disable-next-line no-console
-console.log('Recovery worker started');
+console.log('recovery worker started');

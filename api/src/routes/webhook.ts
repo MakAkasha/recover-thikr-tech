@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { prisma } from '../db/client';
 import { validateSallaWebhook } from '../middleware/validateWebhook';
 import { rateLimitWebhook } from '../middleware/rateLimit';
-import { scheduleRecovery } from '../services/queue';
+import { schedulerecovery } from '../services/queue';
 import { RecoveryJobData } from '../types';
 
 export const webhookRouter = Router();
@@ -69,7 +69,7 @@ webhookRouter.post('/salla/:storeId', rateLimitWebhook(), validateSallaWebhook, 
       cartValue,
     };
 
-    const job = await scheduleRecovery(jobData, store.delayMinutes * 60 * 1000);
+    const job = await schedulerecovery(jobData, store.delayMinutes * 60 * 1000);
 
     await prisma.recoveryLog.update({
       where: { id: log.id },

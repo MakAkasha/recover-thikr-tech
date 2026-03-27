@@ -1,4 +1,4 @@
-# Recover Dashboard — Phase 2
+# Baqi Dashboard — Phase 2
 
 Next.js 14 dashboard for store onboarding, stats, messages, and billing.
 

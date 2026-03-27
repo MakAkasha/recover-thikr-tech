@@ -9,6 +9,7 @@ import { internalRouter } from './routes/internal';
 import { authRouter } from './routes/auth';
 import { webhookRouter } from './routes/webhook';
 import { paymentsRouter } from './routes/payments';
+import { dashboardRouter } from './routes/dashboard';
 import { initQrWebSocket } from './ws/qrSocket';
 import { getOrCreateSession } from './services/whatsapp';
 import { startMaintenanceJobs } from './jobs/maintenance';
@@ -37,6 +38,7 @@ app.use('/api/webhook', webhookRouter);
 // Moyasar webhook must use raw body for signature verification
 app.use('/api/payments/moyasar/webhook', express.raw({ type: 'application/json', limit: config.bodyLimit }));
 app.use('/api/payments', paymentsRouter);
+app.use('/api/dashboard', dashboardRouter);
 
 app.post('/api/whatsapp/:storeId/connect', async (req, res, next) => {
   try {
@@ -60,5 +62,5 @@ startMaintenanceJobs();
 
 server.listen(config.apiPort, () => {
   // eslint-disable-next-line no-console
-  console.log(`Recover API listening on port ${config.apiPort}`);
+  console.log(`Baqi API listening on port ${config.apiPort}`);
 });

@@ -3,7 +3,7 @@ import { prisma } from '../db/client';
 
 export async function generateDiscountCode(storeId: string, percent: number, cartId?: string): Promise<string> {
   for (let i = 0; i < 5; i += 1) {
-    const code = `RECOVER-${nanoid(5).toUpperCase()}`;
+    const code = `BAQI-${nanoid(5).toUpperCase()}`;
     try {
       await prisma.discountCode.create({
         data: {

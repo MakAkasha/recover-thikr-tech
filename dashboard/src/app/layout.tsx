@@ -2,7 +2,7 @@ import './globals.css';
 import { ReactNode } from 'react';
 
 export const metadata = {
-  title: 'Recover | استرجاع السلات المتروكة',
+  title: 'باقي | استرجاع السلات المتروكة',
   description: 'استرجع مبيعاتك المفقودة تلقائياً عبر واتساب',
 };
 
